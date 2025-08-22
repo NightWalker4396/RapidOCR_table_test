@@ -7,7 +7,10 @@ from pathlib import Path
 from typing import Tuple, Union
 from urllib.parse import urlparse
 
-import cv2
+try:  # optional dependency
+    import cv2  # type: ignore
+except Exception:  # pragma: no cover
+    cv2 = None  # type: ignore
 import numpy as np
 
 
@@ -44,6 +47,8 @@ def save_img(save_path: Union[str, Path], img: np.ndarray):
     if not Path(save_path).parent.exists():
         Path(save_path).parent.mkdir(parents=True, exist_ok=True)
 
+    if cv2 is None:
+        raise ImportError("cv2 is required for save_img but is not installed")
     cv2.imwrite(str(save_path), img)
 
 
